@@ -1,12 +1,9 @@
-import math
-import random
-from typing import Callable, Literal, Optional, Tuple
+from typing import Callable, Literal, Optional
 import warnings
 
 import torch
 from torch import Tensor
 from torch.nn import Module
-from torch.nn.utils.rnn import unpad_sequence
 from torchaudio.transforms import (
     Spectrogram,
 )
@@ -14,7 +11,7 @@ from torchaudio.transforms import (
 from whalevad.utils import padding_mask, unpad_mean
 
 
-class SpectrogramBackbone(Module):
+class SpectrogramExtractor(Module):
     def __init__(
         self,
         *,
