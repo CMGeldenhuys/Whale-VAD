@@ -189,7 +189,7 @@ class WhaleVADClassifier(Module):
             self.bb_proj = Linear(128 * 3, 64)
 
         self.lstm = LSTM(
-            num_features=64,  # output of feat_proj
+            input_size=64,  # output of feat_proj
             hidden_size=128,
             bidirectional=True,
             num_layers=2,
