@@ -1,2 +1,2 @@
 from .model import WhaleVADClassifier
-from .specgrogram import SpectrogramBackbone
+from .specgrogram import SpectrogramExtractor
