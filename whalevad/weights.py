@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Callable, Dict, Mapping, Optional
+from typing import Any, Callable, Dict, Mapping, Optional, Self
 from dataclasses import dataclass, field
 
 from torch import Tensor
@@ -58,6 +58,13 @@ class WeightsEnum(Enum):
     def model_config(self):
         return self.value.model_config
 
+    @classmethod
+    def verify(cls, inst: str | Self) -> Self:
+        if isinstance(inst, WeightsEnum):
+            return inst
+
+        return getattr(cls, inst)
+
 
 class WhaleVAD_Weights(WeightsEnum):
     ATBFL_DCASE_3P_V1 = Weights(
@@ -80,7 +87,7 @@ class WhaleVAD_Weights(WeightsEnum):
 
 
 def whalevad(
-    weights: Optional[WhaleVAD_Weights] = None,
+    weights: Optional[WhaleVAD_Weights | str] = None,
     progress: bool = True,
     transform: Optional[Module | Callable] = None,
     **kwargs,
@@ -88,6 +95,7 @@ def whalevad(
     if weights is None:
         clf = WhaleVADClassifier(**kwargs)
         return WhaleVADModel(clf, transform)
+    weights = WhaleVAD_Weights.verify(weights)
     state = weights.get_state_dict(progress=progress, check_hash=True)
     clf = WhaleVADClassifier(**weights.model_config, **kwargs)
     clf.load_state_dict(state)
