@@ -1,70 +1,27 @@
 from enum import Enum
-from functools import partial
-from typing import Any, Callable, Mapping
-from dataclasses import dataclass
+from typing import Any, Callable, Dict, Mapping, Optional
+from dataclasses import dataclass, field
+
+from torch import Tensor
+from torch.nn import Module
 from torch.hub import load_state_dict_from_url
 
-CHECKPOINTS = {
-    "WhaleVAD_Weights.ATBFL_DCASE": "/home/devsploit/Research/biodcase2025_task2/WhaleVAD_trig_threeclass.pt"
-}
+from whalevad.model import WhaleVADClassifier, WhaleVADModel
+from whalevad.specgrogram import SpectrogramExtractor
+
+__all__ = [
+    "WhaleVAD_Weights",
+    "whalevad",
+]
 
 
-def whalevad(pretrained=True, threeclass=True, use_phase=True):
-    if threeclass is not True:
-        raise NotImplementedError
-    if use_phase is not True:
-        raise NotImplementedError
-
-
-# Yonked from https://github.com/pytorch/vision/blob/d5df0d67dc43db85a3963795903b51c57a6146c1/torchvision/models/_api.py
+# Based on https://github.com/pytorch/vision/blob/d5df0d67dc43db85a3963795903b51c57a6146c1/torchvision/models/_api.py
 @dataclass
 class Weights:
-    """
-    This class is used to group important attributes associated with the pre-trained weights.
-
-    Args:
-        url (str): The location where we find the weights.
-        transforms (Callable): A callable that constructs the preprocessing method (or validation preset transforms)
-            needed to use the model. The reason we attach a constructor method rather than an already constructed
-            object is because the specific object might have memory and thus we want to delay initialization until
-            needed.
-        meta (Dict[str, Any]): Stores meta-data related to the weights of the model and its configuration. These can be
-            informative attributes (for example the number of parameters/flops, recipe link/methods used in training
-            etc), configuration parameters (for example the `num_classes`) needed to construct the model or important
-            meta-data (for example the `classes` of a classification model) needed to use the model.
-    """
-
     url: str
-    transforms: Callable
-    meta: dict[str, Any]
-
-    def __eq__(self, other: Any) -> bool:
-        # We need this custom implementation for correct deep-copy and deserialization behavior.
-        # TL;DR: After the definition of an enum, creating a new instance, i.e. by deep-copying or deserializing it,
-        # involves an equality check against the defined members. Unfortunately, the `transforms` attribute is often
-        # defined with `functools.partial` and `fn = partial(...); assert deepcopy(fn) != fn`. Without custom handling
-        # for it, the check against the defined members would fail and effectively prevent the weights from being
-        # deep-copied or deserialized.
-        # See https://github.com/pytorch/vision/pull/7107 for details.
-        if not isinstance(other, Weights):
-            return NotImplemented
-
-        if self.url != other.url:
-            return False
-
-        if self.meta != other.meta:
-            return False
-
-        if isinstance(self.transforms, partial) and isinstance(
-            other.transforms, partial
-        ):
-            return (
-                self.transforms.func == other.transforms.func
-                and self.transforms.args == other.transforms.args
-                and self.transforms.keywords == other.transforms.keywords
-            )
-        else:
-            return self.transforms == other.transforms
+    transform: Optional[Callable | Module] = None
+    meta: Dict[str, Any] = field(default_factory=dict)
+    model_config: Dict[str, Any] = field(default_factory=dict)
 
 
 class WeightsEnum(Enum):
@@ -77,16 +34,7 @@ class WeightsEnum(Enum):
         value (Weights): The data class entry with the weight information.
     """
 
-    @classmethod
-    def verify(cls, obj: Any) -> Any:
-        if obj is not None:
-            if type(obj) is str:
-                obj = cls[obj.replace(cls.__name__ + ".", "")]
-            elif not isinstance(obj, cls):
-                raise TypeError(
-                    f"Invalid Weight class provided; expected {cls.__name__} but received {obj.__class__.__name__}."
-                )
-        return obj
+    value: Weights  # type: ignore
 
     def get_state_dict(self, *args: Any, **kwargs: Any) -> Mapping[str, Any]:
         return load_state_dict_from_url(self.url, *args, **kwargs)
@@ -99,18 +47,54 @@ class WeightsEnum(Enum):
         return self.value.url
 
     @property
-    def transforms(self):
-        return self.value.transforms
+    def transform(self):
+        return self.value.transform
 
     @property
     def meta(self):
         return self.value.meta
 
+    @property
+    def model_config(self):
+        return self.value.model_config
+
 
 class WhaleVAD_Weights(WeightsEnum):
     ATBFL_DCASE_3P_V1 = Weights(
-        url="/home/devsploit/Research/biodcase2025_task2/WhaleVAD_trig_threeclass.pt",
-        transforms=None,
-        meta=None,
+        url="https://github.com/CMGeldenhuys/Whale-VAD/tag/v0.1.0/WhaleVAD_ATBFL_3P-8f25a81b.pt",
+        model_config=dict(
+            num_classes=7,
+            feat_channels=3,
+        ),
+        transform=SpectrogramExtractor(
+            sample_rate=250,
+            n_fft=256,
+            win_length=256,
+            hop_length=5,
+            norm_features="demean",
+            power=None,
+            complex_repr="trig",
+        ),
     )
     DEFAULT = ATBFL_DCASE_3P_V1
+
+
+def whalevad(
+    weights: Optional[WhaleVAD_Weights] = None,
+    progress: bool = True,
+    transform: Optional[Module | Callable] = None,
+    **kwargs,
+) -> WhaleVADModel:
+    if weights is None:
+        clf = WhaleVADClassifier(**kwargs)
+        return WhaleVADModel(clf, transform)
+    state = weights.get_state_dict(progress=progress, check_hash=True)
+    clf = WhaleVADClassifier(**weights.model_config, **kwargs)
+    clf.load_state_dict(state)
+
+    if transform is None:
+        transform = weights.transform
+
+    model = WhaleVADModel(clf, transform)
+
+    return model
