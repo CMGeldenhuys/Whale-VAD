@@ -1,4 +1,4 @@
-from typing import Dict, List, Literal, Optional, Tuple
+from typing import Callable, Dict, List, Literal, Optional, Tuple
 
 from torch import Tensor, adaptive_avg_pool1d
 import torch
@@ -310,3 +310,24 @@ class ResidualBlock(Module):
         if self.output_residuals:
             return torch.concat(residuals, dim=-2)
         return X
+
+
+class WhaleVADModel(Module):
+    def __init__(
+        self,
+        classifier: WhaleVADClassifier,
+        transform: Optional[Module | Callable[[Tensor], Tensor]],
+    ):
+        super().__init__()
+        self.classifier = classifier
+        self.transform = transform
+
+    def forward(self, audio: Tensor):
+        spec = audio
+        if self.transform:
+            spec = self.transform(audio)
+        return self.classifier(spec)
+
+    def __iter__(self):
+        yield self.classifier
+        yield self.transform
