@@ -68,7 +68,7 @@ class WeightsEnum(Enum):
 
 class WhaleVAD_Weights(WeightsEnum):
     ATBFL_DCASE_3P_V1 = Weights(
-        url="https://github.com/CMGeldenhuys/Whale-VAD/tag/v0.1.0/WhaleVAD_ATBFL_3P-c6f6a07a.pt",
+        url="https://github.com/CMGeldenhuys/Whale-VAD/releases/download/v0.1.0/WhaleVAD_ATBFL_3P-c6f6a07a.pt",
         model_config=dict(
             num_classes=7,
             feat_channels=3,
