@@ -13,8 +13,7 @@ A lightweight sound event detection system for discovering whale calls in marine
 
 <!-- DCASE/BioDCASE logo placeholder -->
 <p align="center">
-  <img src="assets/dcase_logo.png" alt="DCASE Logo" width="200"/>
-  <img src="assets/biodcase_logo.png" alt="BioDCASE Logo" width="200"/>
+  <img src="assets/BioDCASE_logo.png" alt="BioDCASE Logo" width="400"/>
 </p>
 
 ## Getting Started
@@ -72,7 +71,7 @@ Pre-trained model weights are available in the [GitHub Releases](https://github.
 If you use this work in your research, please cite:
 
 ```
-Geldenhuys, C., Tonitz, G., & Niesler, T. (2025). Whale-VAD: Whale Vocalisation Activity Detection. Proceedings of the 10th Workshop on Detection and Classification of Acoustic Scenes and Events (DCASE 2025), 165–169. https://doi.org/10.5281/zenodo.17251589
+Geldenhuys, C. M., Tonitz, G., & Niesler, T. R. (2025). Whale-VAD: Whale Vocalisation Activity Detection. Proceedings of the 10th Workshop on Detection and Classification of Acoustic Scenes and Events (DCASE 2025), 165–169. https://doi.org/10.5281/zenodo.17251589
 ```
 
 ```bibtex
@@ -96,20 +95,20 @@ We welcome contributions to improve Whale-VAD! Please feel free to submit issues
 
 ## Authors
 
-- **Christiaan M. Geldenhuys** [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--1234--5678-green.svg)](https://orcid.org/0000-0002-1234-5678)
+- **Christiaan M. Geldenhuys** [![ORCID](https://img.shields.io/badge/ORCID-0000--0003--0691--0235-green.svg)](https://orcid.org/0000-0003-0691-0235)
 
-- **Günther Tonitz** [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--1234--5678-green.svg)](https://orcid.org/0000-0002-1234-5678)
+- **Günther Tonitz** [![ORCID](https://img.shields.io/badge/ORCID-0009--0009--6030--4122-green.svg)](https://orcid.org/0009-0009-6030-4122)
 
-- **Thomas R. Niesler** [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--1234--5678-green.svg)](https://orcid.org/0000-0002-1234-5678)
+- **Thomas R. Niesler** [![ORCID](https://img.shields.io/badge/ORCID-0000--0002--7341--1017-green.svg)](https://orcid.org/0000-0002-7341-1017)
 
 ## Acknowledgements
 
 The authors gratefully acknowledge Telkom (South Africa) for their financial support, and the [Stellenbosch Rhasatsha high performance computing (HPC)](https://www0.sun.ac.za/hpc) facility for the compute time provided to the research presented in this work.
 
-<p align="center">
-    <img src="assets/Telkom_logo.png" alt="Telkom  Logo" width="200"/>
-    <img src="assets/SU_logo.png" alt="Stellenbosch University Logo" width="200"/>
-</p>
+<!--<p align="center">
+    <img src="assets/SU_logo.png" alt="Stellenbosch University Logo" height="100"/>
+    <img src="assets/Telkom_logo.png" alt="Telkom  Logo" height="100"/>
+</p>-->
 
 ## License
 
