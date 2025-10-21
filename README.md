@@ -20,6 +20,8 @@ A lightweight sound event detection system for discovering whale calls in marine
 
 Whale-VAD uses PyTorch Hub for easy model loading and inference. The model automatically handles feature extraction and produces frame-level probability outputs for three whale call types: `bmabz`, `d`, and `bp`.
 
+### Basic Usage (PyTorch Hub)
+
 ```python
 import torch
 import torchaudio as ta
@@ -34,6 +36,26 @@ assert sr == 250
 # Perform inference
 features = transform(audio)
 prob = classifier(features)  # Frame-level probabilities for bmabz, d, and bp
+```
+
+### Manual Usage
+
+If you have installed the package locally (see [Installation](#installation)), you can use the `whalevad` module directly:
+
+```python
+import torch
+from whalevad import WhaleVADClassifier
+
+# Create classifier with random initialization
+classifier = WhaleVADClassifier(num_classes=7)
+
+# Optional: Manually load pretrained model weights from checkpoint
+path_to_checkpoint = "path/to/checkpoint.pth"
+checkpoint = torch.load(path_to_checkpoint, weights_only=True, map_location='cpu')
+classifier.load_state_dict(checkpoint)
+
+# Perform inference
+prob = classifier(features)
 ```
 
 ### Requirements
@@ -54,6 +76,25 @@ The model produces frame-level probability outputs for three whale call types:
 - `bmabz`: Blue whale calls (BmA, BmB, BmZ)
 - `d`: D-calls (BmD and BpD)
 - `bp`: Fin whale calls (Bp20 and Bp20plus)
+
+## Installation
+
+### Option 1: Install via pip (Recommended)
+
+```sh
+# Inside your project virtual environment
+pip install git+https://github.com/CMGeldenhuys/Whale-VAD.git
+```
+
+### Option 2: Install from source
+
+```sh
+git clone https://github.com/CMGeldenhuys/Whale-VAD.git
+cd Whale-VAD
+pip install -r requirements.txt
+```
+
+This will install the `whalevad` package and all required dependencies.
 
 ## Dataset
 
