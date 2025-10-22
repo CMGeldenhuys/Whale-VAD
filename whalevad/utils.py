@@ -11,6 +11,18 @@ from torch.nn.utils.rnn import unpad_sequence
 def unpad_mean(
     input: Tensor, *, dim: Optional[int] = None, keepdim: bool = False, lengths
 ):
+    """
+    Computes the mean of a sequence of tensors along a specified dimension.
+
+    Args:
+        input (Tensor): The input tensor.
+        dim (Optional[int]): The dimension along which to compute the mean.
+        keepdim (bool): Whether to keep the dimension of the input tensor.
+        lengths (List[int] | Tensor): The lengths of the sequences.
+
+    Returns:
+        Tensor: The mean of the sequence of tensors.
+    """
 
     input_seq = unpad_sequence(input, lengths=lengths, batch_first=True)
     if keepdim:
@@ -27,6 +39,18 @@ def padding_mask(
     device: torch.device | None = None,
     max_len: Optional[int] = None
 ) -> Tensor:
+    """
+    Creates a padding mask for a batch of sequences.
+
+    Args:
+        lengths (List[int] | Tensor): The lengths of the sequences.
+        dtype (torch.dtype): The data type of the mask.
+        device (torch.device | None): The device on which to create the mask.
+        max_len (Optional[int]): The maximum length of the sequences.
+
+    Returns:
+        Tensor: The padding mask.
+    """
     if isinstance(lengths, Tensor):
         lengths = lengths.tolist()
     batch_size = len(lengths)
