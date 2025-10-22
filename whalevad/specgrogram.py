@@ -67,14 +67,18 @@ class SpectrogramExtractor(Module):
 
     def forward(
         self,
-        audio: Tensor,
+        audio: Tensor,  # shape: ([batch], [channels], time)
         *,
         lengths: Optional[Tensor] = None,
         **_,
-    ):
+    ):  # shape: ([batch], [channels=1], time, feat)
+        # add empty channel dim
+        if audio.ndim == 1:
+            audio = audio.unsqueeze(0)
         # add empty batch dim
         if audio.ndim == 2:
             audio = audio.unsqueeze(0)
+
         feat: Tensor = self.spectrogram(audio)
         # shape: batch, *, channel_dim=1, feat_dim, time_dim
         # Remove empty channel dim
