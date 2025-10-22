@@ -32,6 +32,7 @@ classifier, transform = torch.hub.load("CMGeldenhuys/Whale-VAD", 'whalevad', wei
 
 # Load audio file (must be sampled at 250 Hz, single channel)
 audio, sr = ta.load("whale-call.wav")
+# shape: (channels=1, samples)
 assert sr == 250
 
 # Perform inference
@@ -61,10 +62,11 @@ model.load_state_dict(checkpoint)
 # NOTE: might take a moment to download
 # requires `remotezip`, install with `pip install remotezip`
 audio, sr = get_atbfl_examplar()
-# shape: (channel, samples)
+# shape: (channel=1, samples)
 
 # Perform inference
 logits, prob, _ = model(audio)
+# shape: (batch=1, frame, classes)
 ```
 
 ### Requirements
