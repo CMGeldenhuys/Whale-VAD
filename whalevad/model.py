@@ -359,7 +359,7 @@ class WhaleVADModel(Module):
         if self.transform:
             spec, trans_opts = self.transform(audio)
             opts.update(**opts)
-        return self.classifier(spec)
+        return self.classifier(spec, **opts)
 
     def __iter__(self):
         yield self.classifier
