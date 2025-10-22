@@ -51,20 +51,25 @@ def load_remote_audio(url: str, filename: str, **kwargs):
 
 
 @dataclass
-class ATBFLExamplar:
+class ATBFLExemplar:
     filename: str
-    start: int
-    end: int
+    start_s: float
+    end_s: float
+    sample_rate: int = 250
 
+    def fetch_and_load(self, **kwargs):
+        start = int(self.start_s * self.sample_rate)
+        end = int(self.end_s * self.sample_rate)
+        return get_atbfl_exemplar(self.filename, start, end, **kwargs)
 
 ATBFL_REPO_URL = (
     "https://zenodo.org/records/15092732/files/biodcase_development_set.zip?download=1"
 )
 ATBFL_EXAMPLARS = {
-    "train": ATBFLExamplar(
-        "biodcase_development_set/train/audio/kerguelen2014/2014-06-29T23-00-00_000.wav",
-        0,
-        2500,
+    "val": ATBFLExemplar(
+        "biodcase_development_set/validation/audio/kerguelen2014/2014-06-29T23-00-00_000.wav",
+        2755.0,
+        2765.0,
     )
 }
 
