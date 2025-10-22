@@ -74,7 +74,7 @@ ATBFL_EXAMPLARS = {
 }
 
 
-def get_atbfl_examplar(
+def get_atbfl_exemplar(
     filename: Optional[str] = None,
     start: Optional[int] = None,
     end: Optional[int] = None,
