@@ -354,10 +354,11 @@ class WhaleVADModel(Module):
         self.classifier = classifier
         self.transform = transform
 
-    def forward(self, audio: Tensor):
+    def forward(self, audio: Tensor, **opts):
         spec = audio
         if self.transform:
-            spec = self.transform(audio)
+            spec, trans_opts = self.transform(audio)
+            opts.update(**opts)
         return self.classifier(spec)
 
     def __iter__(self):
