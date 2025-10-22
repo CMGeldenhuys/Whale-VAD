@@ -72,6 +72,9 @@ class SpectrogramExtractor(Module):
         lengths: Optional[Tensor] = None,
         **_,
     ):
+        # add empty batch dim
+        if audio.ndim == 2:
+            audio = audio.unsqueeze(0)
         feat: Tensor = self.spectrogram(audio)
         # shape: batch, *, channel_dim=1, feat_dim, time_dim
         # Remove empty channel dim
