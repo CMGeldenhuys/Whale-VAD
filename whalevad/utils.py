@@ -83,6 +83,18 @@ def get_atbfl_exemplar(
     split: Literal["train", "val"] | None = None,
     **kwargs,
 ) -> Tuple[Tensor, int]:
+    """
+    Fetches and loads an ATBFL exemplar from the repository. This operation only downloads the required chunks from the repo not the entire zip file.
+
+    Args:
+        filename: The filename of the audio file to load.
+        start: The start time in seconds.
+        end: The end time in seconds.
+        split: The split to use ("train" or "val")
+
+    Returns:
+        A tuple containing the audio tensor and the sample rate.
+    """
     if filename is None:
         assert start is None, "start must be None when using pre-configured exemplars"
         assert end is None, "end must be None when using pre-configured exemplars"
