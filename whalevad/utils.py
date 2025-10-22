@@ -1,12 +1,10 @@
-from typing import List, Optional, Callable
+from typing import List, Optional
 
-from functools import partial
 import io
 import torchaudio
 
 import torch
 from torch import Tensor
-from torch.nn import Module
 from torch.nn.utils.rnn import unpad_sequence
 
 
@@ -27,7 +25,7 @@ def padding_mask(
     *,
     dtype: torch.dtype = torch.bool,
     device: torch.device | None = None,
-    max_len: Optional[int] = None
+    max_len: Optional[int] = None,
 ) -> Tensor:
     if isinstance(lengths, Tensor):
         lengths = lengths.tolist()
