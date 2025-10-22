@@ -79,13 +79,15 @@ def get_atbfl_examplar(
     start: Optional[int] = None,
     end: Optional[int] = None,
     **kwargs,
-):
+) -> Tuple[Tensor, int]:
     if filename is None:
-        default = ATBFL_EXAMPLARS["train"]
-        filename = default.filename
-        start = start if start is not None else default.start
-        end = end if end is not None else default.end
-    audio, sr = load_remote_audio(ATBFL_REPO_URL, filename, **kwargs)
+        assert start is None, "start must be None when using pre-configured exemplars"
+        assert end is None, "end must be None when using pre-configured exemplars"
+
+        split = split or "train"
+        exemplar = ATBFL_EXAMPLARS[split]
+
+        return exemplar.fetch_and_load(**kwargs)
     assert sr == 250, f"expected sample rate of ATBFL to be 250Hz got {sr}Hz instead"
 
     if start is not None or end is not None:
