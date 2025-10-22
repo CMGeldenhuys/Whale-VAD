@@ -41,13 +41,50 @@ def padding_mask(
     return mask
 
 
-def load_remote_audio(url: str, filename: str, **kwargs):
+def load_remote_audio(
+    url: str,
+    filename: str,
+    *,
+    frame_offset: Optional[int] = None,
+    num_frames: Optional[int] = None,
+    start_s: Optional[float] = None,
+    end_s: Optional[float] = None,
+    sample_rate: Optional[int] = None,
+    **kwargs,
+):
     from remotezip import RemoteZip
+
+    if start_s is not None:
+        assert frame_offset is None, "offset and start_s cannot be both specified"
+        assert (
+            sample_rate is not None
+        ), "sample_rate must be specified when using start_s"
+        frame_offset = int(start_s * sample_rate)
+    frame_offset = frame_offset or 0
+    del start_s
+
+    if end_s is not None:
+        assert num_frames is None, "num_frames and end_s cannot be both specified"
+        assert sample_rate is not None, "sample_rate must be specified when using end_s"
+        end = int(end_s * sample_rate)
+        num_frames = end - frame_offset
+        assert num_frames > 0, "num_frames must be positive"
+    num_frames = num_frames or -1
+    del end_s
 
     with RemoteZip(url) as zf:
         with zf.open(filename) as file:
             buffer = io.BytesIO(file.read())
-            return torchaudio.load(buffer, **kwargs)
+            audio, sr = torchaudio.load(
+                buffer,
+                frame_offset=frame_offset,
+                num_frames=num_frames,
+                **kwargs,
+            )
+    assert (
+        sr == sample_rate
+    ), f"sample rate mismatch: {sr}Hz (file) != {sample_rate}Hz (expected)"
+    return audio, sr
 
 
 @dataclass
@@ -58,9 +95,13 @@ class ATBFLExemplar:
     sample_rate: int = 250
 
     def fetch_and_load(self, **kwargs):
-        start = int(self.start_s * self.sample_rate)
-        end = int(self.end_s * self.sample_rate)
-        return get_atbfl_exemplar(self.filename, start, end, **kwargs)
+        return get_atbfl_exemplar(
+            self.filename,
+            start_s=self.start_s,
+            end_s=self.end_s,
+            sample_rate=self.sample_rate,
+            **kwargs,
+        )
 
 
 ATBFL_REPO_URLS = {
@@ -68,18 +109,22 @@ ATBFL_REPO_URLS = {
     "val": "https://zenodo.org/records/15092732/files/biodcase_development_set.zip?download=1",
 }
 ATBFL_EXAMPLARS = {
+    "train": ATBFLExemplar(
+        "biodcase_development_set/train/audio/kerguelen2005/2005-06-21T18-00-00_000.wav",
+        960.0,
+        970.0,
+    ),
     "val": ATBFLExemplar(
         "biodcase_development_set/validation/audio/kerguelen2014/2014-06-29T23-00-00_000.wav",
         2755.0,
         2765.0,
-    )
+    ),
 }
 
 
 def get_atbfl_exemplar(
     filename: Optional[str] = None,
-    start: Optional[int] = None,
-    end: Optional[int] = None,
+    *,
     split: Literal["train", "val"] | None = None,
     **kwargs,
 ) -> Tuple[Tensor, int]:
@@ -96,18 +141,10 @@ def get_atbfl_exemplar(
         A tuple containing the audio tensor and the sample rate.
     """
     if filename is None:
-        assert start is None, "start must be None when using pre-configured exemplars"
-        assert end is None, "end must be None when using pre-configured exemplars"
-
         split = split or "train"
         exemplar = ATBFL_EXAMPLARS[split]
 
         return exemplar.fetch_and_load(**kwargs, split=split)
     assert split is not None, "split must be specified"
-    audio, sr = load_remote_audio(ATBFL_REPO_URLS[split], filename, **kwargs)
-    assert sr == 250, f"expected sample rate of ATBFL to be 250Hz got {sr}Hz instead"
 
-    if start is not None or end is not None:
-        audio = audio[:, start:end]
-
-    return audio, sr
+    return load_remote_audio(ATBFL_REPO_URLS[split], filename, **kwargs)
