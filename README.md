@@ -34,8 +34,8 @@ audio, sr = ta.load("whale-call.wav")
 assert sr == 250
 
 # Perform inference
-features = transform(audio)
-prob = classifier(features)  # Frame-level probabilities for bmabz, d, and bp
+features, _ = transform(audio)
+logits, prob, _ = classifier(features)  # Frame-level probabilities for bmabz, d, and bp
 ```
 
 ### Manual Usage
