@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Literal, Optional, Tuple
 
 import io
 import torchaudio
@@ -62,9 +62,11 @@ class ATBFLExemplar:
         end = int(self.end_s * self.sample_rate)
         return get_atbfl_exemplar(self.filename, start, end, **kwargs)
 
-ATBFL_REPO_URL = (
-    "https://zenodo.org/records/15092732/files/biodcase_development_set.zip?download=1"
-)
+
+ATBFL_REPO_URL = {
+    "train": "https://zenodo.org/records/15092732/files/biodcase_development_set.zip?download=1",
+    "val": "https://zenodo.org/records/15092732/files/biodcase_development_set.zip?download=1",
+}
 ATBFL_EXAMPLARS = {
     "val": ATBFLExemplar(
         "biodcase_development_set/validation/audio/kerguelen2014/2014-06-29T23-00-00_000.wav",
@@ -78,6 +80,7 @@ def get_atbfl_exemplar(
     filename: Optional[str] = None,
     start: Optional[int] = None,
     end: Optional[int] = None,
+    split: Literal["train", "val"] | None = None,
     **kwargs,
 ) -> Tuple[Tensor, int]:
     if filename is None:
@@ -88,6 +91,8 @@ def get_atbfl_exemplar(
         exemplar = ATBFL_EXAMPLARS[split]
 
         return exemplar.fetch_and_load(**kwargs)
+    assert split is not None, "split must be specified"
+    audio, sr = load_remote_audio(ATBFL_REPO_URL[split], filename, **kwargs)
     assert sr == 250, f"expected sample rate of ATBFL to be 250Hz got {sr}Hz instead"
 
     if start is not None or end is not None:
