@@ -63,7 +63,7 @@ class ATBFLExemplar:
         return get_atbfl_exemplar(self.filename, start, end, **kwargs)
 
 
-ATBFL_REPO_URL = {
+ATBFL_REPO_URLS = {
     "train": "https://zenodo.org/records/15092732/files/biodcase_development_set.zip?download=1",
     "val": "https://zenodo.org/records/15092732/files/biodcase_development_set.zip?download=1",
 }
@@ -104,7 +104,7 @@ def get_atbfl_exemplar(
 
         return exemplar.fetch_and_load(**kwargs)
     assert split is not None, "split must be specified"
-    audio, sr = load_remote_audio(ATBFL_REPO_URL[split], filename, **kwargs)
+    audio, sr = load_remote_audio(ATBFL_REPO_URLS[split], filename, **kwargs)
     assert sr == 250, f"expected sample rate of ATBFL to be 250Hz got {sr}Hz instead"
 
     if start is not None or end is not None:
