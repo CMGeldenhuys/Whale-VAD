@@ -18,6 +18,16 @@ __all__ = [
 # Based on https://github.com/pytorch/vision/blob/d5df0d67dc43db85a3963795903b51c57a6146c1/torchvision/models/_api.py
 @dataclass
 class Weights:
+    """
+    Dataclass containing configuration related to model weights.
+
+    Args:
+        url (str): The URL to download the pre-trained weights from.
+        transform (Optional[Callable | Module]): The transformation to apply to the input data.
+        meta (Dict[str, Any]): Additional metadata about the weights.
+        model_config (Dict[str, Any]): Configuration parameters for the model.
+    """
+
     url: str
     transform: Optional[Callable | Module] = None
     meta: Dict[str, Any] = field(default_factory=dict)
@@ -92,6 +102,23 @@ def whalevad(
     transform: Optional[Module | Callable] = None,
     **kwargs,
 ) -> WhaleVADModel:
+    """
+    Create a WhaleVAD model with pre-trained weights.
+
+    Args:
+        weights (Optional[WhaleVAD_Weights | str]): The weights to use for the model.
+        progress (bool): Whether to show a progress bar while downloading the weights.
+        transform (Optional[Module | Callable]): The transformation to apply to the input data.
+        **kwargs: Additional keyword arguments to pass to the model constructor.
+
+    Returns:
+        WhaleVADModel
+
+    Example:
+        >>> model = whalevad(weights='DEFAULT')
+        >>> model.eval()
+        >>> classifier, transform = model
+    """
     if weights is None:
         clf = WhaleVADClassifier(**kwargs)
         return WhaleVADModel(clf, transform)
