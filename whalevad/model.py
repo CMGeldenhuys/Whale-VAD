@@ -5,7 +5,6 @@ import torch
 from torch.nn import (
     GELU,
     LSTM,
-    AdaptiveAvgPool1d,
     BatchNorm2d,
     Conv2d,
     Flatten,
@@ -16,6 +15,10 @@ from torch.nn import (
     Sequential,
     Dropout,
     Dropout2d,
+)
+from torch.nn.utils.rnn import (
+    pad_packed_sequence,
+    pack_padded_sequence,
 )
 
 
@@ -33,12 +36,14 @@ class WhaleVADClassifier(Module):
         include_bottleneck_layers: bool = True,
         include_aggregation_layers: bool = True,
         num_anchors: int = 64,
+        return_hidden_state: bool = False,
     ) -> None:
         super().__init__()
         num_classes = (
             num_classes if num_classes is not None else len(self._class_mapping)
         )
         self.num_anchors = num_anchors
+        self.return_hidden_state = return_hidden_state
 
         # Act as a learnable mel
         self.fbank = Conv2d(
@@ -230,8 +235,16 @@ class WhaleVADClassifier(Module):
     def forward(
         self,
         features: Tensor,  # shape(batch_dim, *, [channel], time, embedding_size)
+        lab_lengths: Optional[Tensor] = None,
+        hidden_state: Optional[Tensor] = None,
         **opts,
     ) -> Tuple[Tensor, Tensor, Dict]:
+        # If lab_lengths is None, assume no padding
+        if lab_lengths is None:
+            batch_size = features.size(0) if features.ndim >= 4 else 1
+            time_dim = features.size(-2)
+            lab_lengths = torch.full((batch_size,), time_dim)
+
         return_opts = dict()
         # Swap time and feature dim
         features = features.transpose(-1, -2)
@@ -252,12 +265,31 @@ class WhaleVADClassifier(Module):
         # shape: (batch, time, channel*feat=384)
 
         # Down project
-        latent = self.feat_proj(cepstrum)
+        cepstrum_proj = self.feat_proj(cepstrum)
         # shape: (batch, time, proj=128)
 
-        # RNN
-        logits, pred, clf_opts = self.lstm(latent, **opts)
-        return_opts.update(clf_opts)
+        # Create packed sequence with padding already applied
+        lab_lengths = lab_lengths.cpu()
+        feat_seq = pack_padded_sequence(
+            cepstrum_proj,
+            lab_lengths,
+            batch_first=True,
+            enforce_sorted=False,  # Could drop since collate ensures it is sorted
+        )
+
+        Z_seq, hidden_state = self.lstm(feat_seq, hidden_state)
+
+        # Convert packed sequence to regular tensor with zero padding
+        Z, Z_len = pad_packed_sequence(Z_seq, batch_first=True)
+        assert torch.all(Z_len == lab_lengths)
+
+        return_opts["rnn_lengths"] = Z_len
+        return_opts["hidden_state"] = (
+            hidden_state if self.return_hidden_state else None,
+        )
+
+        logits = self.classifier(Z)
+        pred = torch.nn.functional.sigmoid(logits)
 
         if self.include_bounding_boxes:
             assert self.bounding_box_conf is not None
