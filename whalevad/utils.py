@@ -1,6 +1,8 @@
 from typing import List, Optional, Callable
 
 from functools import partial
+import io
+import torchaudio
 
 import torch
 from torch import Tensor
@@ -38,3 +40,13 @@ def padding_mask(
         assert l <= time, "index of bounds, increate max_len"
         mask[i, l:] = True
     return mask
+
+
+def load_remote_audio(url: str, filename: str, **kwargs):
+    from remotezip import RemoteZip
+
+    with RemoteZip(url) as zf:
+        with zf.open(filename) as file:
+            buffer = io.BytesIO(file.read())
+            return torchaudio.load(buffer, **kwargs)
+
