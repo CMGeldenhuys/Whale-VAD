@@ -12,6 +12,26 @@ from whalevad.utils import padding_mask, unpad_mean
 
 
 class SpectrogramExtractor(Module):
+    """
+    Extracts spectrograms from audio signals.
+
+    Args:
+        sample_rate (int): The sample rate of the audio signals.
+        n_fft (int): The number of FFT points.
+        win_length (Optional[int]): The window length.
+        hop_length (Optional[int]): The hop length.
+        pad (int): The padding size.
+        power (float | None): The power to raise the spectrogram to.
+        normalized (bool | Literal["window", "frame_length"]): Whether to normalize the spectrogram.
+        window_fn (Callable[..., Tensor] | str): The window function.
+        center (bool): Whether to center the spectrogram.
+        onesided (bool): Whether to use one-sided spectrogram.
+        pad_mode (str): The padding mode.
+        norm_features (Literal["demean"] | None): Whether to normalize the features.
+        complex_repr (Literal["real+imag", "mag+phase", "real+imag+mag+phase", "trig"] | None): The complex representation.
+        apply_log (bool): Whether to apply logarithm to the spectrogram.
+    """
+
     def __init__(
         self,
         *,
@@ -72,6 +92,17 @@ class SpectrogramExtractor(Module):
         lengths: Optional[Tensor] = None,
         **_,
     ):  # shape: ([batch], [channels=1], time, feat)
+        """
+        Extracts spectrograms from audio signals.
+
+        Args:
+            audio (Tensor): The audio signals.
+            lengths (Optional[Tensor]): The lengths of the audio signals.
+            **_: Ignored additional arguments.
+
+        Returns:
+            Tensor: The spectrogram.
+        """
         # add empty channel dim
         if audio.ndim == 1:
             audio = audio.unsqueeze(0)
