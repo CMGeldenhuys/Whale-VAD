@@ -102,7 +102,7 @@ def get_atbfl_exemplar(
         split = split or "train"
         exemplar = ATBFL_EXAMPLARS[split]
 
-        return exemplar.fetch_and_load(**kwargs)
+        return exemplar.fetch_and_load(**kwargs, split=split)
     assert split is not None, "split must be specified"
     audio, sr = load_remote_audio(ATBFL_REPO_URLS[split], filename, **kwargs)
     assert sr == 250, f"expected sample rate of ATBFL to be 250Hz got {sr}Hz instead"
