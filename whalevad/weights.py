@@ -7,7 +7,7 @@ from torch.nn import Module
 from torch.hub import load_state_dict_from_url
 
 from whalevad.model import WhaleVADClassifier, WhaleVADModel
-from whalevad.specgrogram import SpectrogramExtractor
+from whalevad.spectrogram import SpectrogramExtractor
 
 __all__ = [
     "WhaleVAD_Weights",
