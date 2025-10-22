@@ -100,6 +100,7 @@ def whalevad(
     weights: Optional[WhaleVAD_Weights | str] = None,
     progress: bool = True,
     transform: Optional[Module | Callable] = None,
+    eval: bool = True,
     **kwargs,
 ) -> WhaleVADModel:
     """
@@ -131,5 +132,8 @@ def whalevad(
         transform = weights.transform
 
     model = WhaleVADModel(clf, transform)
+
+    if eval:
+        model = model.eval()
 
     return model
