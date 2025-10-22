@@ -26,7 +26,8 @@ Whale-VAD uses PyTorch Hub for easy model loading and inference. The model autom
 import torch
 import torchaudio as ta
 
-# Load the model
+# Load the model, and unpack classifier and feature extractor (transform)
+# NOTE: will automatically fetch model weights
 classifier, transform = torch.hub.load("CMGeldenhuys/Whale-VAD", 'whalevad', weights='DEFAULT')
 
 # Load audio file (must be sampled at 250 Hz, single channel)
@@ -34,8 +35,8 @@ audio, sr = ta.load("whale-call.wav")
 assert sr == 250
 
 # Perform inference
-features = transform(audio)
-prob = classifier(features)  # Frame-level probabilities for bmabz, d, and bp
+features, _ = transform(audio)
+logits, prob, _ = classifier(features)  # Frame-level probabilities for bmabz, d, and bp
 ```
 
 ### Manual Usage
@@ -44,18 +45,26 @@ If you have installed the package locally (see [Installation](#installation)), y
 
 ```python
 import torch
-from whalevad import WhaleVADClassifier
+from whalevad import whalevad
+from whalevad.utils import get_atbfl_examplar
 
-# Create classifier with random initialization
-classifier = WhaleVADClassifier(num_classes=7)
+# Create model with random initialization
+# NOTE: model contains both classifier and feature extractor (transform)
+model = whalevad(weights=None)
 
-# Optional: Manually load pretrained model weights from checkpoint
+# (optional) Manually load pretrained model weights from checkpoint
 path_to_checkpoint = "path/to/checkpoint.pth"
 checkpoint = torch.load(path_to_checkpoint, weights_only=True, map_location='cpu')
-classifier.load_state_dict(checkpoint)
+model.load_state_dict(checkpoint)
+
+# (optional) Fetch and load examplar from ATBFL dataset
+# NOTE: might take a moment to download
+# requires `remotezip`, install with `pip install remotezip`
+audio, sr = get_atbfl_examplar()
+# shape: (channel, samples)
 
 # Perform inference
-prob = classifier(features)
+logits, prob, _ = model(audio)
 ```
 
 ### Requirements

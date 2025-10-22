@@ -23,6 +23,19 @@ from torch.nn.utils.rnn import (
 
 
 class WhaleVADClassifier(Module):
+    """
+    Create Whale-VAD classifier.
+
+    Args:
+        num_classes (Optional[int]): The number of classes to classify.
+        feat_channels (int): The number of input feature channels.
+        include_intermediate_features (bool): Whether to include intermediate features.
+        include_bounding_boxes (bool): Whether to include bounding boxes.
+        include_bottleneck_layers (bool): Whether to include bottleneck layers.
+        include_aggregation_layers (bool): Whether to include aggregation layers.
+        num_anchors (int): The number of anchors.
+        return_hidden_state (bool): Whether to return the hidden state.
+    """
 
     _class_mapping = ["bmabz", "d", "bp"]
 
@@ -239,6 +252,17 @@ class WhaleVADClassifier(Module):
         hidden_state: Optional[Tensor] = None,
         **opts,
     ) -> Tuple[Tensor, Tensor, Dict]:
+        """Create Whale-VAD classifier.
+
+        Args:
+            features (Tensor): Input features.
+            lab_lengths (Optional[Tensor]): Lengths of labels.
+            hidden_state (Optional[Tensor]): Hidden state.
+            **opts: Additional options.
+
+        Returns:
+            Tuple[Tensor, Tensor, Dict]: Output logits, frame-level call probabilities and additional internal state.
+        """
         # If lab_lengths is None, assume no padding
         if lab_lengths is None:
             batch_size = features.size(0) if features.ndim >= 4 else 1
@@ -345,6 +369,14 @@ class ResidualBlock(Module):
 
 
 class WhaleVADModel(Module):
+    """
+    Construct complete Whale-VAD model, containing **both** classifier and feature extractor (transform).
+
+    Args:
+        classifier: WhaleVADClassifier
+        transform: Optional[Module | Callable[[Tensor], Tensor]]
+    """
+
     def __init__(
         self,
         classifier: WhaleVADClassifier,
@@ -359,7 +391,7 @@ class WhaleVADModel(Module):
         if self.transform:
             spec, trans_opts = self.transform(audio)
             opts.update(**opts)
-        return self.classifier(spec)
+        return self.classifier(spec, **opts)
 
     def __iter__(self):
         yield self.classifier
