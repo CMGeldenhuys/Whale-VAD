@@ -20,7 +20,9 @@ A lightweight sound event detection system for discovering whale calls in marine
 
 Whale-VAD uses PyTorch Hub for easy model loading and inference. The model automatically handles feature extraction and produces frame-level probability outputs for three whale call types: `bmabz`, `d`, and `bp`.
 
-### Basic Usage (PyTorch Hub)
+### Basic Usage (PyTorch Hub, Recommended)
+
+PyTorch Hub automatically handles downloading and installing the required code. No additional installations beyond PyTorch is needed.
 
 ```python
 import torch
