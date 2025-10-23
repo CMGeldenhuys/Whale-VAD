@@ -107,7 +107,7 @@ pip install git+https://github.com/CMGeldenhuys/Whale-VAD.git
 ```sh
 git clone https://github.com/CMGeldenhuys/Whale-VAD.git
 cd Whale-VAD
-pip install -r requirements.txt
+pip install -r .
 ```
 
 This will install the `whalevad` package and all required dependencies.
