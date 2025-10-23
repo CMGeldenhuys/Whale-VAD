@@ -9,7 +9,7 @@ authors = [
   { name="Christiaan M. Geldenhuys", email="cmgeldenhuys@sun.ac.za" },
   { name="Günther Tonitz", email="gtonitz@sun.ac.za" },
 ]
-description = "A lightweight sound event detection system for discovering whale calls in marine audio recordings"
+description = "A lightweight sound event detection system for discovering Baleen whale calls in marine audio recordings"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "GPL-3.0-or-later"
