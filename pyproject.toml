@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "whalevad"
-dynamic = ["version"]
+version = "0.1.2"
 authors = [
   { name="Christiaan M. Geldenhuys", email="cmgeldenhuys@sun.ac.za" },
   { name="Günther Tonitz", email="gtonitz@sun.ac.za" },
