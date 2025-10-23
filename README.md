@@ -55,6 +55,9 @@ from whalevad.utils import get_atbfl_examplar
 # NOTE: model contains both classifier and feature extractor (transform)
 model = whalevad(weights=None)
 
+# (optional) Unpack classifier and feature extractor
+# classifier, transform = model
+
 # (optional) Manually load pretrained model weights from checkpoint
 path_to_checkpoint = "path/to/checkpoint.pth"
 checkpoint = torch.load(path_to_checkpoint, weights_only=True, map_location='cpu')
