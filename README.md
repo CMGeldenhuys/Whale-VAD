@@ -76,8 +76,8 @@ logits, prob, _ = model(audio)
 
 ### Requirements
 
-- Python >= 3.11.13
-- PyTorch >= 2.7.1
+- Python >= 3.11.0
+- PyTorch >= 2.0.0
 - torchaudio
 
 ### Input Specifications
