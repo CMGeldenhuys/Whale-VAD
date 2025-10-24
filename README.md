@@ -99,7 +99,7 @@ The model produces frame-level probability outputs for three whale call types:
 
 ```sh
 # Inside your project virtual environment
-pip install git+https://github.com/CMGeldenhuys/Whale-VAD.git
+pip install whalevad
 ```
 
 ### Option 2: Install from source
@@ -107,7 +107,7 @@ pip install git+https://github.com/CMGeldenhuys/Whale-VAD.git
 ```sh
 git clone https://github.com/CMGeldenhuys/Whale-VAD.git
 cd Whale-VAD
-pip install -r .
+pip install .
 ```
 
 This will install the `whalevad` package and all required dependencies.
