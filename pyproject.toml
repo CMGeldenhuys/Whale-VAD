@@ -8,7 +8,7 @@ source-include = ["assets/**"]
 
 [project]
 name = "whalevad"
-version = "0.1.5"
+version = "0.1.6"
 authors = [
   { name="Christiaan M. Geldenhuys", email="cmgeldenhuys@sun.ac.za" },
   { name="Günther Tonitz", email="gtonitz@sun.ac.za" },
