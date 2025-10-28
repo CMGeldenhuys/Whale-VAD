@@ -136,7 +136,7 @@ Geldenhuys, C. M., Tonitz, G., & Niesler, T. R. (2025). WhaleVAD-BPN: Improving 
 ```
 
 ```bibtex
-@inproceedings{Geldenhuys2025,
+@inproceedings{Geldenhuys2025WhaleVAD,
     author = "Geldenhuys, Christiaan and Tonitz, Günther and Niesler, Thomas",
     title = "Whale-VAD: Whale Vocalisation Activity Detection",
     booktitle = "Proceedings of the 10th Workshop on Detection and Classification of Acoustic Scenes and Events (DCASE 2025)",
