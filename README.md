@@ -1,7 +1,8 @@
 # Whale-VAD: Whale Vocalisation Activity Detection
 
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.17251589-blue)](https://doi.org/10.5281/zenodo.17251589)
-[![Paper](https://img.shields.io/badge/Paper-DCASE%202025-green)](https://dcase.community/documents/workshop2025/proceedings/DCASE2025Workshop_Geldenhuys_57.pdf)
+[![WhaleVAD Paper](https://img.shields.io/badge/WhaleVAD%20Paper-DCASE%202025-green)](https://dcase.community/documents/workshop2025/proceedings/DCASE2025Workshop_Geldenhuys_57.pdf)
+[![WhaleVAD-BPN Paper](https://img.shields.io/badge/WhaleVAD--BPN%20Paper-Preprint%202025-orange)](https://arxiv.org/abs/2510.21280)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.7+](https://img.shields.io/badge/PyTorch-2.7+-ee4c2c.svg)](https://pytorch.org/)
@@ -129,10 +130,13 @@ If you use this work in your research, please cite:
 
 ```
 Geldenhuys, C. M., Tonitz, G., & Niesler, T. R. (2025). Whale-VAD: Whale Vocalisation Activity Detection. Proceedings of the 10th Workshop on Detection and Classification of Acoustic Scenes and Events (DCASE 2025), 165–169. https://doi.org/10.5281/zenodo.17251589
+
+Geldenhuys, C. M., Tonitz, G., & Niesler, T. R. (2025). WhaleVAD-BPN: Improving Baleen Whale Call Detection with Boundary Proposal Networks and Post-processing Optimisation (No. arXiv:2510.21280). arXiv. https://doi.org/10.48550/arXiv.2510.21280
+
 ```
 
 ```bibtex
-@inproceedings{Geldenhuys2025,
+@inproceedings{Geldenhuys2025WhaleVAD,
     author = "Geldenhuys, Christiaan and Tonitz, Günther and Niesler, Thomas",
     title = "Whale-VAD: Whale Vocalisation Activity Detection",
     booktitle = "Proceedings of the 10th Workshop on Detection and Classification of Acoustic Scenes and Events (DCASE 2025)",
@@ -142,6 +146,16 @@ Geldenhuys, C. M., Tonitz, G., & Niesler, T. R. (2025). Whale-VAD: Whale Vocalis
     pages = "165--169",
     isbn = "978-84-09-77652-8",
     doi = "10.5281/zenodo.17251589"
+}
+
+@misc{Geldenhuys2025WhaleVADBPN,
+      title={WhaleVAD-BPN: Improving Baleen Whale Call Detection with Boundary Proposal Networks and Post-processing Optimisation},
+      author={Christiaan M. Geldenhuys and Günther Tonitz and Thomas R. Niesler},
+      year={2025},
+      eprint={2510.21280},
+      archivePrefix={arXiv},
+      primaryClass={eess.AS},
+      url={https://arxiv.org/abs/2510.21280},
 }
 ```
 
