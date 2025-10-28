@@ -130,6 +130,9 @@ If you use this work in your research, please cite:
 
 ```
 Geldenhuys, C. M., Tonitz, G., & Niesler, T. R. (2025). Whale-VAD: Whale Vocalisation Activity Detection. Proceedings of the 10th Workshop on Detection and Classification of Acoustic Scenes and Events (DCASE 2025), 165–169. https://doi.org/10.5281/zenodo.17251589
+
+Geldenhuys, C. M., Tonitz, G., & Niesler, T. R. (2025). WhaleVAD-BPN: Improving Baleen Whale Call Detection with Boundary Proposal Networks and Post-processing Optimisation (No. arXiv:2510.21280). arXiv. https://doi.org/10.48550/arXiv.2510.21280
+
 ```
 
 ```bibtex
@@ -143,6 +146,16 @@ Geldenhuys, C. M., Tonitz, G., & Niesler, T. R. (2025). Whale-VAD: Whale Vocalis
     pages = "165--169",
     isbn = "978-84-09-77652-8",
     doi = "10.5281/zenodo.17251589"
+}
+
+@misc{Geldenhuys2025WhaleVADBPN,
+      title={WhaleVAD-BPN: Improving Baleen Whale Call Detection with Boundary Proposal Networks and Post-processing Optimisation},
+      author={Christiaan M. Geldenhuys and Günther Tonitz and Thomas R. Niesler},
+      year={2025},
+      eprint={2510.21280},
+      archivePrefix={arXiv},
+      primaryClass={eess.AS},
+      url={https://arxiv.org/abs/2510.21280},
 }
 ```
 
