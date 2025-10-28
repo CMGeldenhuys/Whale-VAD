@@ -1,7 +1,8 @@
 # Whale-VAD: Whale Vocalisation Activity Detection
 
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.17251589-blue)](https://doi.org/10.5281/zenodo.17251589)
-[![Paper](https://img.shields.io/badge/Paper-DCASE%202025-green)](https://dcase.community/documents/workshop2025/proceedings/DCASE2025Workshop_Geldenhuys_57.pdf)
+[![WhaleVAD Paper](https://img.shields.io/badge/WhaleVAD%20Paper-DCASE%202025-green)](https://dcase.community/documents/workshop2025/proceedings/DCASE2025Workshop_Geldenhuys_57.pdf)
+[![WhaleVAD-BPN Paper](https://img.shields.io/badge/WhaleVAD--BPN%20Paper-Preprint%202025-orange)](https://arxiv.org/abs/2510.21280)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![PyTorch 2.7+](https://img.shields.io/badge/PyTorch-2.7+-ee4c2c.svg)](https://pytorch.org/)
